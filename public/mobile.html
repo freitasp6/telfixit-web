@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>DUO Mobile</title>
+  <link 
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <style>
+    .foto-thumb { width:60px; margin:2px; }
+    .pointer { cursor:pointer; }
+    .alert-position {
+      position: fixed; top:1rem; right:1rem; z-index:1055;
+    }
+    /* Vodafone red */
+    .vodafone-red { background-color: #E60000 !important; }
+    .text-white { color: #fff !important; }
+  </style>
+</head>
+<body class="p-3">
+
+  <div id="alertContainer" class="alert-position"></div>
+
+  <!-- LOGIN -->
+  <div id="loginBox">
+    <h5>Login Mobile</h5>
+    <input id="mobUser" class="form-control mb-2" placeholder="Username"/>
+    <input id="mobPass" type="password" class="form-control mb-2" placeholder="Password"/>
+    <button id="btnMobLogin" class="btn btn-danger w-100">Entrar</button>
+    <div id="mobErr" class="text-danger mt-2"></div>
+  </div>
+
+  <!-- APP -->
+  <div id="mobApp" class="d-none">
+    <nav class="navbar vodafone-red mb-3">
+      <div class="container-fluid">
+        <span id="headerUser" class="navbar-brand text-white"></span>
+        <button id="btnLogout" class="btn btn-sm btn-outline-light">Logout</button>
+      </div>
+    </nav>
+    <div id="mobList" class="accordion"></div>
+  </div>
+
+  <script src="auth.js"></script>
+  <script>
+    function alerta(msg, type='success') {
+      const a = document.createElement('div');
+      a.className = `alert alert-${type} alert-dismissible fade show`;
+      a.innerHTML = `${msg}<button type="button" class="btn-close" data-bs-dismiss="alert"></button>`;
+      document.getElementById('alertContainer').appendChild(a);
+      setTimeout(() => a.remove(), 4000);
+    }
+
+    // LOGIN
+    document.getElementById('btnMobLogin').onclick = async () => {
+      const u = document.getElementById('mobUser').value;
+      const p = document.getElementById('mobPass').value;
+      const res = await fetch('/login',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ username:u, password:p })
+      });
+      if (!res.ok) {
+        document.getElementById('mobErr').textContent = await res.text();
+        return;
+      }
+      const { token } = await res.json();
+      localStorage.token = token;
+      startMobile();
+    };
+
+    // LOGOUT
+    document.getElementById('btnLogout').onclick = () => {
+      localStorage.removeItem('token');
+      window.location = 'mobile.html';
+    };
+
+    // auto-login
+    if (localStorage.token) startMobile();
+
+    async function startMobile() {
+      document.getElementById('loginBox').classList.add('d-none');
+      document.getElementById('mobApp').classList.remove('d-none');
+
+      const me = jwtDecode(localStorage.token);
+      document.getElementById('headerUser').textContent = `Olá, ${me.username}`;
+
+      const all = await authFetch('/wos').then(r=>r.json());
+      const meus = all.filter(w =>
+        w.tecnico === me.username ||
+        (me.equipa && w.equipa === me.equipa)
+      );
+
+      const list = document.getElementById('mobList');
+      list.innerHTML = meus.map((wo,i) => `
+        <div class="accordion-item mb-2">
+          <h2 class="accordion-header" id="hdr${i}">
+            <button class="accordion-button collapsed pointer vodafone-red text-white" 
+                    type="button" data-bs-toggle="collapse" data-bs-target="#det${i}">
+              ${wo.assunto} (${wo.estado})
+            </button>
+          </h2>
+          <div id="det${i}" class="accordion-collapse collapse" aria-labelledby="hdr${i}">
+            <div class="accordion-body">
+              <p><strong>Data Limite:</strong> ${wo.data||''}</p>
+              <p><strong>Zona:</strong> ${wo.zona||''}</p>
+              <p><strong>Descrição:</strong><br/>${wo.descricao||''}</p>
+              <hr/>
+
+              <h6>Alterar Estado</h6>
+              <button class="btn btn-sm btn-outline-success mb-2 change-curso">Em Curso</button>
+              <button class="btn btn-sm btn-outline-primary mb-3 change-fechada">Fechada</button>
+              <hr/>
+
+              <h6>Comentários Técnico</h6>
+              <ul>${(wo.comentarios_tecnico||[]).map(c=>`<li>${c}</li>`).join('')||'<li>(sem)</li>'}</ul>
+              <h6>Comentários Backoffice</h6>
+              <ul>${(wo.comentarios_backoffice||[]).map(c=>`<li>${c}</li>`).join('')||'<li>(sem)</li>'}</ul>
+
+              <div class="input-group mb-3">
+                <select class="form-select tipo-comentario" style="max-width:150px">
+                  <option value="tecnico">Técnico</option>
+                  <option value="backoffice">Backoffice</option>
+                </select>
+                <input type="text" class="form-control comentario-input" placeholder="Comentário..."/>
+                <button class="btn btn-outline-primary add-comentario">Enviar</button>
+              </div>
+
+              <div class="mb-2 fotos-list">
+                ${(wo.fotos||[]).map(f=>`
+                  <a href="${f.path}" target="_blank">
+                    <img src="${f.path}" class="foto-thumb rounded"/>
+                  </a>`).join('')||'(sem)'}
+              </div>
+
+              <div class="input-group">
+                <input type="file" multiple class="form-control fotos-input"/>
+                <button class="btn btn-outline-primary upload-fotos">Upload</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      meus.forEach((wo,i) => {
+        const item = list.children[i].querySelector('.accordion-body');
+        item.querySelector('.change-curso').onclick = async () => {
+          await authFetch(`/wos/${encodeURIComponent(wo.assunto)}`, {
+            method:'PUT',
+            headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({ estado:'Em Curso' })
+          });
+          alerta('Estado alterado para Em Curso');
+          startMobile();
+        };
+        item.querySelector('.change-fechada').onclick = async () => {
+          await authFetch(`/wos/${encodeURIComponent(wo.assunto)}`, {
+            method:'PUT',
+            headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({ estado:'Fechada' })
+          });
+          alerta('Estado alterado para Fechada');
+          startMobile();
+        };
+        item.querySelector('.add-comentario').onclick = async () => {
+          const tipo = item.querySelector('.tipo-comentario').value;
+          const txt  = item.querySelector('.comentario-input').value.trim();
+          if (!txt) return alerta('Comentário vazio','danger');
+          await authFetch(`/comentarios/${encodeURIComponent(wo.assunto)}`, {
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({ tipo, comentario: txt })
+          });
+          alerta('Comentário enviado');
+          startMobile();
+        };
+        item.querySelector('.upload-fotos').onclick = async () => {
+          const files = item.querySelector('.fotos-input').files;
+          if (!files.length) return alerta('Selecione pelo menos 1 foto','danger');
+          const fd = new FormData();
+          [...files].forEach(f=>fd.append('fotos', f));
+          await authFetch(`/fotos/${encodeURIComponent(wo.assunto)}`, {
+            method:'POST',
+            body: fd
+          });
+          alerta('Fotos enviadas');
+          startMobile();
+        };
+      });
+    }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

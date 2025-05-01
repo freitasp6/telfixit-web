@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>DUO WebApp – Gestão de WOs</title>
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+    rel="stylesheet"
+  />
+  <style>
+    body { background: #fff; }
+    .navbar { background-color: #d50000; }
+    .navbar-brand, .btn-outline-light { color: #fff !important; }
+    .sla-red { border-left: 5px solid #dc3545; }
+    .sla-ora { border-left: 5px solid #ffc107; }
+    .sla-grn { border-left: 5px solid #28a745; }
+    .pointer { cursor: pointer; }
+    .alert-position {
+      position: fixed; top: 1rem; right: 1rem; z-index: 1055;
+    }
+    .foto-thumb {
+      max-width: 100px; margin: .25rem;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg mb-4">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">DUO WebApp</a>
+    <div class="btn-toolbar">
+      <button id="btnNovaWO"           class="btn btn-outline-light me-1">Nova WO</button>
+      <button id="btnPendentes"        class="btn btn-outline-light me-1">Em Curso/Pendentes</button>
+      <button id="btnFechadas"         class="btn btn-outline-light me-1">Fechadas</button>
+      <button id="btnPesquisar"        class="btn btn-outline-light me-1"><i class="bi bi-search"></i></button>
+      <button id="btnCriarEquipa"      class="btn btn-outline-light me-1">Criar Equipa</button>
+      <button id="btnConsultarEquipas" class="btn btn-outline-light me-1">Consultar Equipas</button>
+      <button id="btnEstatisticas"     class="btn btn-outline-light me-1">Estatísticas</button>
+      <button id="btnUsers"            class="btn btn-outline-warning me-1 d-none">Utilizadores</button>
+      <button id="btnLogout"           class="btn btn-outline-light">Logout</button>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+  <div id="alertContainer" class="alert-position"></div>
+
+  <!-- Search -->
+  <div id="searchPanel" class="mb-3 d-none">
+    <input id="searchInput" class="form-control" placeholder="Pesquisar WOs..." />
+  </div>
+
+  <!-- Nova WO -->
+  <div id="panelNovaWO" class="card mb-4 d-none">
+    <div class="card-body">
+      <h5 class="card-title">📝 Criar Nova WO</h5>
+      <div class="row g-2">
+        <div class="col-md-6">
+          <label>Assunto:</label>
+          <input id="inAssunto" class="form-control" />
+        </div>
+        <div class="col-md-6">
+          <label>Data Limite:</label>
+          <input id="inData" type="datetime-local" class="form-control" />
+        </div>
+        <div class="col-12">
+          <label>Descrição:</label>
+          <textarea id="inDesc" class="form-control"></textarea>
+        </div>
+        <div class="col-md-6">
+          <label>Localização:</label>
+          <input id="inLocal" class="form-control" />
+        </div>
+        <div class="col-md-6">
+          <label>Link Óptico:</label>
+          <textarea id="inLink" class="form-control"></textarea>
+        </div>
+        <div class="col-md-4">
+          <label>Zona:</label>
+          <select id="inZona" class="form-select" disabled>
+            <option value="">— selecione —</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label>Técnico:</label>
+          <select id="inTecnico" class="form-select" disabled>
+            <option value="">— selecione —</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label>Empresa:</label>
+          <select id="inEmpresa" class="form-select" disabled>
+            <option value="">— selecione —</option>
+          </select>
+        </div>
+      </div>
+      <button id="saveWO" class="btn btn-primary mt-3">Guardar WO</button>
+    </div>
+  </div>
+
+  <!-- Criar Equipa -->
+  <div id="panelCriarEquipa" class="card mb-4 d-none">
+    <div class="card-body">
+      <h5 class="card-title">👥 Criar Equipa</h5>
+      <div class="row g-2">
+        <div class="col-md-4">
+          <label>Técnico:</label>
+          <input id="inEqTecnico" class="form-control" />
+        </div>
+        <div class="col-md-4">
+          <label>Empresa:</label>
+          <input id="inEqEmpresa" class="form-control" />
+        </div>
+        <div class="col-md-4">
+          <label>Zona:</label>
+          <input id="inEqZona" class="form-control" />
+        </div>
+      </div>
+      <button id="saveEquipe" class="btn btn-primary mt-3">Guardar Equipa</button>
+    </div>
+  </div>
+
+  <!-- Consultar Equipas -->
+  <div id="panelConsultarEquipas" class="card mb-4 d-none">
+    <div class="card-body">
+      <h5 class="card-title">🔍 Equipas</h5>
+      <table class="table">
+        <thead><tr><th>Técnico</th><th>Empresa</th><th>Zona</th><th>Ações</th></tr></thead>
+        <tbody id="tblEquipas"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Estatísticas -->
+  <div id="panelEstatisticas" class="card mb-4 d-none">
+    <div class="card-body">
+      <h5 class="card-title">📊 Estatísticas</h5>
+      <p>Total WOs: <span id="statTotal">0</span></p>
+      <p>Em Curso/Pendentes: <span id="statPendentes">0</span></p>
+      <p>Fechadas: <span id="statFechadas">0</span></p>
+    </div>
+  </div>
+
+  <!-- Lista de WOs -->
+  <div id="painel" class="row"></div>
+</div>
+
+<!-- scripts -->
+<script src="auth.js"></script>
+<script src="app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

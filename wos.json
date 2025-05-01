@@ -1,0 +1,67 @@
+[
+  {
+    "assunto": "16598532 - INC000164993142 PDO-92-PRN-1572 NOS - Critical , 6h00m Úteis",
+    "descricao": "INC000164993142 PDO-92-PRN-1572 NOS\n \nDescrição\nRecebemos a seguinte avaria da NOS\n \nBeneficiário:\n[Dados do Beneficiário             [NOME DO PROCESSO OPERACIONAL] *              AVARIA COMUM REDE PROPRIETÁRIO DETETADA PELO BENEFICÁRIO\n              [ID_TICKET_BENEFICIÁRIO] *  INC000164993142\n              [LISTA DE PORTOS DE PDO/PLC E RESPETIVOS PDO/PLC AFETADOS] *    PRN.PDO-92-PRN-1572.65\nPRN.PDO-92-PRN-1572.66\nPRN.PDO-92-PRN-1572.67\nPRN.PDO-92-PRN-1572.68\n              [FICHEIROS ANEXOS] \n              [OBSERVAÇÕES]           Acessos em LOS\n \n",
+    "localizacao": "Praça Bom Sucesso, 159, Porto",
+    "link": "PDO-92-PRN-1572-SPL-N1_NOS-02 1:16 PDO-92-PRN-1572-SPL-N1_NOS-01 1:4 •\tVDF-PRN06-92044 T1F5  ",
+    "empresa": "Telfixit",
+    "tecnico": "",
+    "zona": "Porto",
+    "data_limite": "2025-04-30T19:09",
+    "estado": "Em Curso",
+    "comentarios_tecnico": [
+      "teste 123",
+      "teste 1234",
+      "teste 123",
+      "novo"
+    ],
+    "comentarios_backoffice": [
+      "teste bck",
+      "teste back office"
+    ],
+    "fotos": [
+      {
+        "filename": "e9d43fbff8d5474d993a6740ca094580",
+        "original": "Captura de ecrÃ£ 2024-09-23 181931.png",
+        "path": "/uploads/e9d43fbff8d5474d993a6740ca094580"
+      },
+      {
+        "filename": "4b786d3da0c797d3065c1b2434701cb6",
+        "original": "Captura de ecrÃ£ 2024-09-23 181931.png",
+        "path": "/uploads/4b786d3da0c797d3065c1b2434701cb6"
+      }
+    ]
+  },
+  {
+    "assunto": "WO 16610634 | PDO-95-MAI-0078.40 | Major , 35h00m Úteis",
+    "descricao": "Assunto\n188377369 - PDO-95-MAI-0078.40\nDescrição\nONT nao regista Acesso - FTTH_188377369 Status do acesso - Reserved Nome do circuito - MAIAOH_01.MAIODF-01.PON.190 Nr ONT - 23 OLT - MAIAOH_01_02 Porto no OLT - MAIAOH_01_02.6.7 ODF - MAIODF-01 Porto IN no ODF - in1:4.1.1.5_N1 Porto OUT no ODF - out2.43.1.20_N1 PDO - PDO-95-MAI-0078 Tipo de PDO - PDO_48 Porto IN no PDO - 40 Porto OUT no PDO - 9 Modelo de PDO - INSIDE Local do PDO - VDF-MAI-0021756 Tipo de local do PDO - Building Instalador do PDO - FTTHEF Celula - MAI01 ONT - ONT_188377369 UA - UAID_000280303 Caixa de piso - FLB-0021756-06-01 Porto IN caixa de piso - 9 Porto OUT caixa de piso - 9 Splitter L1 - JSO-95-MAI-0008-SPL-N1-09 Splitter L1 Porto OUT - 7 Splitter L1 Local - M-PTC00035919 Splitter L2 - Splitter L2 Porto OUT - Splitter L2 Local - ONT Alarme - ONT-6-7-23 Field Service - Wondercom Fibra Primario - VDF-MAI01-JSO0008-95005_T2_F7_Red_Orange Fornecedor do acesso - Vodafone Tipo de ONT - ONTL3_ADAPTIVE Data de serviço - Data de reserva - 2025-04-12 17:40:36\n",
+    "localizacao": "Rua Conselheiro Luís Magalhães 2662 4470616 MAIA 41.257142, -8.654910",
+    "link_optico": "VDF-MAI01-JSO0008-95005_T2_F7_Red_Orange ",
+    "empresa": "Telfixit",
+    "tecnico": "Pedro Freitas",
+    "zona": "Porto",
+    "data_limite": "2025-05-01T00:49",
+    "estado": "Em Curso",
+    "comentarios_tecnico": [
+      "tete",
+      "tete",
+      "tete",
+      "tete"
+    ],
+    "comentarios_backoffice": [
+      "teste"
+    ],
+    "fotos": []
+  },
+  {
+    "assunto": "WO 16610634 | PDO-95-MAI-0078.40 | Major , 35h00m Úteis",
+    "data": "2025-05-01T18:33",
+    "descricao": "wo de teste ",
+    "local": "porto",
+    "link_optico": "link de teste",
+    "empresa": "Telfixit",
+    "zona": "Porto",
+    "tecnico": "",
+    "estado": "Em Curso"
+  }
+]

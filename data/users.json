@@ -1,0 +1,32 @@
+[
+  {
+    "username": "admin",
+    "passwordHash": "$2b$10$uKqGoi06tW6PzEtwYly0Ee9fY3s5DgIGcsE/jGj/OVDPxv0WgEpvi",
+    "role": "admin",
+    "equipa": null
+  },
+  {
+    "username": "Pedro Freitas",
+    "passwordHash": "$2b$10$wnKbz38PcRA9v0V5QHQVPuDq0zgyO9cbiaPVJUSvksSlpiPZKuwGC",
+    "role": "admin",
+    "equipa": null
+  },
+  {
+    "username": "Teresa Rodrigues",
+    "passwordHash": "$2b$10$lfxW3Ucpf.cDF9JltJgJk.e3LH2hzLBalCobQ5lJOhwlD2XpxZ99K",
+    "role": "user",
+    "equipa": ""
+  },
+  {
+    "username": "Jose Ribeiro",
+    "passwordHash": "$2b$10$/K0VbGMplVOrrNf/X5YCeuHh664.377IPLtCAh3iABrvRFfrMxvfy",
+    "role": "user",
+    "equipa": "Jose Ribeiro"
+  },
+  {
+    "username": "Freitasp6",
+    "passwordHash": "$2b$10$YmCqqqGOzv7QTRE7GH61me/pCA8.RIxzD8cisiaU0fhSDXAVeqrh.",
+    "role": "user",
+    "equipa": "Pedro Freitas"
+  }
+]
